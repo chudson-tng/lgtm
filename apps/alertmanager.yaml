@@ -1,0 +1,133 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: kube-prometheus-stack
+  namespace: monitoring
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: kube-prometheus-stack
+      version: "62.7.0"
+      sourceRef:
+        kind: HelmRepository
+        name: prometheus-community
+        namespace: flux-system
+      interval: 1h
+  values:
+    # Disable Prometheus since we're using Mimir
+    prometheus:
+      enabled: false
+    
+    # Enable Alertmanager
+    alertmanager:
+      enabled: true
+      config:
+        global:
+          smtp_smarthost: 'localhost:587'
+          smtp_from: 'alertmanager@example.com'
+        
+        route:
+          receiver: 'null'
+          group_by: ['alertname', 'severity']
+          group_wait: 30s
+          group_interval: 5m
+          repeat_interval: 12h
+          routes:
+            - receiver: 'null'
+              matchers:
+                - alertname =~ "Info.*"
+        
+        receivers:
+          - name: 'null'
+      
+      alertmanagerSpec:
+        replicas: 1
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+        storage:
+          volumeClaimTemplate:
+            spec:
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 2Gi
+    
+    # Configure Grafana datasource for Alertmanager
+    grafana:
+      enabled: false  # We have our own Grafana deployment
+    
+    # Enable node-exporter for metrics collection
+    nodeExporter:
+      enabled: true
+    
+    # Enable kube-state-metrics
+    kubeStateMetrics:
+      enabled: true
+    
+    # Prometheus Operator - needed for ServiceMonitor CRDs
+    prometheusOperator:
+      enabled: true
+      resources:
+        requests:
+          cpu: 50m
+          memory: 128Mi
+      prometheusConfigReloader:
+        resources:
+          requests:
+            cpu: 50m
+            memory: 50Mi
+    
+    # Disable kubelet monitoring (requires more complex setup)
+    kubelet:
+      enabled: false
+    
+    # Disable coreDns monitoring
+    coreDns:
+      enabled: false
+    
+    # Disable kubeApiServer monitoring
+    kubeApiServer:
+      enabled: false
+    
+    # Disable kubeControllerManager monitoring
+    kubeControllerManager:
+      enabled: false
+    
+    # Disable kubeScheduler monitoring
+    kubeScheduler:
+      enabled: false
+    
+    # Disable kubeProxy monitoring
+    kubeProxy:
+      enabled: false
+    
+    # Default rules configuration
+    defaultRules:
+      create: true
+      rules:
+        alertmanager: true
+        etcd: false
+        configReloaders: false
+        general: true
+        k8s: true
+        kubeApiserverAvailability: false
+        kubeApiserverBurnrate: false
+        kubeApiserverHistogram: false
+        kubeApiserverSlos: false
+        kubeControllerManager: false
+        kubelet: false
+        kubeProxy: false
+        kubePrometheusGeneral: true
+        kubePrometheusNodeRecording: true
+        kubernetesApps: true
+        kubernetesResources: true
+        kubernetesStorage: true
+        kubernetesSystem: false
+        node: true
+        nodeExporterAlerting: true
+        nodeExporterRecording: true
+        prometheus: false
+        prometheusOperator: false

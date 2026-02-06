@@ -1,0 +1,122 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: alloy
+  namespace: observability
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: alloy
+      version: "0.7.0"
+      sourceRef:
+        kind: HelmRepository
+        name: grafana
+        namespace: flux-system
+      interval: 1h
+  values:
+    nameOverride: alloy
+    fullnameOverride: alloy
+    
+    controller:
+      type: daemonset
+      
+    alloy:
+      configMap:
+        create: true
+        content: |
+          // Log collection
+          local.file_match "logs" {
+            path_targets = [
+              {__path__ = "/var/log/pods/*/*/*.log"},
+            ]
+            sync_period = "10s"
+          }
+          
+          loki.source.file "logs" {
+            targets    = local.file_match.logs.targets
+            forward_to = [loki.write.default.receiver]
+            tail_from_end = true
+          }
+          
+          loki.write "default" {
+            endpoint {
+              name = "loki"
+              url = "http://loki.observability.svc.cluster.local:3100/loki/api/v1/push"
+            }
+          }
+          
+          // Metrics collection
+          prometheus.scrape "metrics" {
+            targets = [
+              {"__address__" = "localhost:12345"},
+            ]
+            forward_to = [prometheus.remote_write.default.receiver]
+            job_name = "alloy"
+          }
+          
+          prometheus.remote_write "default" {
+            endpoint {
+              name = "mimir"
+              url = "http://mimir-nginx.observability.svc.cluster.local:80/api/v1/push"
+            }
+          }
+          
+          // Trace collection
+          otelcol.receiver.otlp "traces" {
+            grpc {
+              endpoint = "0.0.0.0:4317"
+            }
+            http {
+              endpoint = "0.0.0.0:4318"
+            }
+            output {
+              traces = [otelcol.exporter.otlp.tempo.input]
+            }
+          }
+          
+          otelcol.exporter.otlp "tempo" {
+            client {
+              endpoint = "tempo-distributor.observability.svc.cluster.local:4317"
+              tls {
+                insecure = true
+              }
+            }
+          }
+      
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+      
+      ports:
+        - name: http
+          port: 12345
+          targetPort: 12345
+          protocol: TCP
+        - name: otlp-grpc
+          port: 4317
+          targetPort: 4317
+          protocol: TCP
+        - name: otlp-http
+          port: 4318
+          targetPort: 4318
+          protocol: TCP
+    
+    service:
+      enabled: true
+      type: ClusterIP
+      port: 12345
+    
+    volumeClaimTemplate:
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
+    
+    rbac:
+      create: true
+    
+    serviceAccount:
+      create: true

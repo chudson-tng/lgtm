@@ -1,0 +1,109 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: tempo
+  namespace: observability
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: tempo-distributed
+      version: "1.18.0"
+      sourceRef:
+        kind: HelmRepository
+        name: grafana
+        namespace: flux-system
+      interval: 1h
+  values:
+    storage:
+      trace:
+        backend: local
+        local:
+          path: /var/tempo/traces
+    
+    # Compactor settings
+    compactor:
+      config:
+        compaction:
+          compacted_block_retention: 24h
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+    
+    # Distributor settings
+    distributor:
+      replicas: 1
+      config:
+        receivers:
+          otlp:
+            protocols:
+              grpc:
+                endpoint: "0.0.0.0:4317"
+              http:
+                endpoint: "0.0.0.0:4318"
+          jaeger:
+            protocols:
+              thrift_http:
+                endpoint: "0.0.0.0:14268"
+          zipkin:
+            endpoint: "0.0.0.0:9411"
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+    
+    # Ingester settings
+    ingester:
+      replicas: 1
+      config:
+        replication_factor: 1
+      persistence:
+        enabled: true
+        size: 5Gi
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+    
+    # Querier settings
+    querier:
+      replicas: 1
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+    
+    # Query Frontend settings
+    queryFrontend:
+      replicas: 1
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+    
+    # Metrics Generator
+    metricsGenerator:
+      enabled: true
+      replicas: 1
+      config:
+        storage:
+          path: /var/tempo/generator/wal
+          remote_write:
+            - url: http://mimir-nginx.observability.svc.cluster.local:80/api/v1/push
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+    
+    # Gateway
+    gateway:
+      enabled: true
+      replicas: 1
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+    
+    minio:
+      enabled: false
