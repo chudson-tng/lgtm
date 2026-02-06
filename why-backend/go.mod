@@ -3,6 +3,7 @@ module why-backend
 go 1.22
 
 require (
+	github.com/gin-contrib/cors v1.7.0
 	github.com/gin-gonic/gin v1.10.0
 	github.com/golang-jwt/jwt/v5 v5.2.0
 	github.com/google/uuid v1.5.0

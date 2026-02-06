@@ -2,7 +2,9 @@ package api
 
 import (
 	"database/sql"
+	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/minio/minio-go/v7"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -16,6 +18,16 @@ func NewRouter(db *sql.DB, minio *minio.Client, cfg *config.Config) *gin.Engine 
 	r := gin.New()
 	r.Use(gin.Recovery())
 	r.Use(otelgin.Middleware("why-backend")) // OpenTelemetry tracing
+
+	// CORS middleware to allow browser requests
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://why.local:8000", "http://localhost:3000"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	// Prometheus metrics endpoint for Alloy to scrape
 	r.GET("/metrics", gin.WrapH(promhttp.Handler()))
