@@ -4,3 +4,4 @@ resources:
   - node-exporter.yaml
   - kubernetes-cluster.yaml
   - loki.yaml
+  - why-app-observability.yaml

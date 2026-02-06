@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: why-frontend
+  namespace: why
+  labels:
+    app: why-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: why-frontend
+  template:
+    metadata:
+      labels:
+        app: why-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: ghcr.io/chudson-tng/lgtm/why-frontend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+          name: http
+        env:
+        - name: NEXT_PUBLIC_API_URL
+          value: "http://why.local:8000/api/v1"
+        - name: NODE_ENV
+          value: "production"
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi

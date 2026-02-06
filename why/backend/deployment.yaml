@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: why-backend
+  namespace: why
+  labels:
+    app: why-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: why-backend
+  template:
+    metadata:
+      labels:
+        app: why-backend
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+      - name: backend
+        image: ghcr.io/chudson-tng/lgtm/why-backend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        - name: PORT
+          value: "8080"
+        - name: POSTGRES_URL
+          value: "postgres://why:why-password@why-postgres.why.svc.cluster.local:5432/why?sslmode=disable"
+        - name: MINIO_ENDPOINT
+          value: "loki-minio.observability.svc.cluster.local:9000"
+        - name: MINIO_ACCESS_KEY
+          value: "loki"
+        - name: MINIO_SECRET_KEY
+          value: "supersecret"
+        - name: MINIO_BUCKET
+          value: "why-media"
+        - name: MINIO_USE_SSL
+          value: "false"
+        - name: OTLP_ENDPOINT
+          value: "alloy.observability.svc.cluster.local:4317"
+        - name: JWT_SECRET
+          value: "change-this-in-production-please"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
