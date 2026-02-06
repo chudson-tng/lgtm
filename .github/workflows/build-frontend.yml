@@ -54,9 +54,10 @@ jobs:
 
       - name: Update Kubernetes manifest
         run: |
-          sed -i "s|image: .*why-frontend.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main-${{ github.sha }}|" why/frontend/deployment.yaml
+          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
+          sed -i "s|image: .*why-frontend.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main-${SHORT_SHA}|" why/frontend/deployment.yaml
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add why/frontend/deployment.yaml
-          git commit -m "Update frontend image to main-${{ github.sha }}" || exit 0
+          git commit -m "Update frontend image to main-${SHORT_SHA}" || exit 0
           git push

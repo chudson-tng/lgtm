@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: ghcr.io/chudson-tng/lgtm/why-backend:main-5e78553e647fa2928d3582912d98446c9f9b64f4
+        image: ghcr.io/chudson-tng/lgtm/why-backend:main-5e78553
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
