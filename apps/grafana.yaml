@@ -27,8 +27,8 @@ spec:
         enabled: true
         label: grafana_dashboard
         labelValue: "1"
-        folder: /tmp/dashboards
-        defaultFolderName: "General"
+        folder: /var/lib/grafana/dashboards
+        defaultFolderName: default
         searchNamespace: observability
     
     persistence:
