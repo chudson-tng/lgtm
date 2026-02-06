@@ -115,25 +115,19 @@ spec:
         node-exporter:
           gnetId: 1860
           revision: 31
-          datasource:
-            - name: DS_PROMETHEUS
-              value: Mimir
+          datasource: mimir
 
         # Kubernetes Cluster dashboard
         k8s-cluster:
           gnetId: 7249
           revision: 1
-          datasource:
-            - name: DS_PROMETHEUS
-              value: Mimir
+          datasource: mimir
 
         # Loki Dashboard
         loki-dashboard:
           gnetId: 13407
           revision: 1
-          datasource:
-            - name: DS_LOKI
-              value: Loki
+          datasource: loki
     
     service:
       type: LoadBalancer
