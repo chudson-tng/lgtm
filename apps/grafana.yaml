@@ -27,11 +27,9 @@ spec:
       size: 5Gi
       type: pvc
     
-    admin:
-      existingSecret: ""
-      userKey: admin-user
-      passwordKey: admin-password
-    
+    adminUser: admin
+    adminPassword: admin
+
     datasources:
       datasources.yaml:
         apiVersion: 1
