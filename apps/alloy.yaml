@@ -55,6 +55,38 @@ spec:
             job_name = "alloy"
           }
           
+          prometheus.scrape "kubernetes_services" {
+            job_name = "kubernetes-services"
+            kubernetes_sd_configs {
+              role = "service"
+            }
+            forward_to = [prometheus.remote_write.default.receiver]
+          }
+          
+          prometheus.scrape "kubernetes_pods" {
+            job_name = "kubernetes-pods"
+            kubernetes_sd_configs {
+              role = "pod"
+            }
+            forward_to = [prometheus.remote_write.default.receiver]
+          }
+          
+          prometheus.scrape "kubernetes_nodes" {
+            job_name = "kubernetes-nodes"
+            kubernetes_sd_configs {
+              role = "node"
+            }
+            forward_to = [prometheus.remote_write.default.receiver]
+          }
+          
+          prometheus.scrape "kube_state_metrics" {
+            job_name = "kube-state-metrics"
+            targets = [
+              {"__address__" = "kube-prometheus-kube-state-metrics.monitoring.svc.cluster.local:8080"},
+            ]
+            forward_to = [prometheus.remote_write.default.receiver]
+          }
+          
           prometheus.remote_write "default" {
             endpoint {
               name = "mimir"
