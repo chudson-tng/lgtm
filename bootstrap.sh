@@ -25,7 +25,11 @@ check_prerequisites() {
     
     if ! docker info &> /dev/null; then
         echo "Starting Docker Desktop..."
-        open -a Docker
+        if [[ "$(uname)" == "Darwin" ]]; then
+            open -a Docker
+        else
+            systemctl --user start docker-desktop 2>/dev/null || systemctl start docker 2>/dev/null || echo "Warning: Could not auto-start Docker. Please start it manually."
+        fi
         echo "Waiting for Docker to be ready..."
         for i in {1..30}; do
             if docker info &> /dev/null; then
