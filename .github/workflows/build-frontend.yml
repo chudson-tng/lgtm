@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'why-frontend/**'
+      - 'why/app/frontend/**'
       - '.github/workflows/build-frontend.yml'
   workflow_dispatch:
 
@@ -45,7 +45,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: ./why-frontend
+          context: ./why/app/frontend
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
@@ -56,10 +56,10 @@ jobs:
       - name: Update Kubernetes manifest
         run: |
           SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
-          sed -i "s|image: .*why-frontend.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main-${SHORT_SHA}|" why/frontend/deployment.yaml
+          sed -i "s|image: .*why-frontend.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main-${SHORT_SHA}|" why/deploy/frontend/deployment.yaml
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add why/frontend/deployment.yaml
+          git add why/deploy/frontend/deployment.yaml
           git commit -m "Update frontend image to main-${SHORT_SHA}" || exit 0
           git pull --rebase origin main
           git push
