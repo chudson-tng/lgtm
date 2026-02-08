@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: ghcr.io/chudson-tng/lgtm/why-frontend:main-d3685c6
+        image: ghcr.io/Xetius/lgtm/why-frontend:main-57c2cd2
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
