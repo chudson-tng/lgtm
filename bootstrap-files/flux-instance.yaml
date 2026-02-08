@@ -19,7 +19,7 @@ spec:
     domain: cluster.local
   sync:
     kind: GitRepository
-    url: ssh://git@github.com/chudson-tng/lgtm.git
+    url: ssh://git@github.com/Xetius/lgtm.git
     ref: refs/heads/main
     path: ./clusters/lgtm
   kustomize:
