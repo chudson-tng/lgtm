@@ -1,7 +1,7 @@
 import { Message, Reply } from './types'
 import { getToken } from './auth'
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api/v1'
+const API_BASE_URL = '/api/v1'
 
 function getHeaders(): HeadersInit {
   const headers: HeadersInit = {
