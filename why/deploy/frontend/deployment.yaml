@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: ghcr.io/Xetius/lgtm/why-frontend:main-38b2346
+          image: ghcr.io/Xetius/lgtm/why-frontend:main-6cfea40
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
