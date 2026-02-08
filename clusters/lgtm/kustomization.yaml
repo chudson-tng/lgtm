@@ -4,7 +4,6 @@ resources:
   - grafana-dashboards-flux-kustomization.yaml
   - namespaces.yaml
   - repositories.yaml
-  - infrastructure-flux-kustomization.yaml
   - apps-flux-kustomization.yaml
   - gateway-api-flux-kustomization.yaml
   - traefik-flux-kustomization.yaml
