@@ -11,4 +11,5 @@ resources:
   - cert-manager-flux-kustomization.yaml
   - external-secrets-flux-kustomization.yaml
   - metrics-server-flux-kustomization.yaml
+  - traefik-gateway-flux-kustomization.yaml
   - why-flux-kustomization.yaml
