@@ -26,13 +26,12 @@ spec:
           - name: varlog
             hostPath:
               path: /var/log
-      volumeMounts:
-        extra:
-          - name: varlog
-            mountPath: /var/log
-            readOnly: true
-      
+
     alloy:
+      extraVolumeMounts:
+        - name: varlog
+          mountPath: /var/log
+          readOnly: true
       configMap:
         create: true
         content: |
