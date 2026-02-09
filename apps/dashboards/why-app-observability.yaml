@@ -726,10 +726,24 @@ data:
               "limit": 20
             }
           ],
-          "title": "Recent Traces (Click trace to see details, then view logs)",
-          "type": "traces",
+          "title": "Recent Traces (Click trace ID to see details)",
+          "type": "table",
           "options": {
-            "sortOrder": "Newest first"
+            "showHeader": true,
+            "sortBy": [
+              {
+                "displayName": "Start Time",
+                "desc": true
+              }
+            ]
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "align": "auto",
+                "displayMode": "auto"
+              }
+            }
           }
         },
         {
