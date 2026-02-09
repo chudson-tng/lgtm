@@ -32,7 +32,7 @@ spec:
         - name: POSTGRES_URL
           value: "postgres://why:why-password@why-postgres.why.svc.cluster.local:5432/why?sslmode=disable"
         - name: MINIO_ENDPOINT
-          value: "loki-minio.monitoring.svc.cluster.local:9000"
+          value: "why-minio.why.svc.cluster.local:9000"
         - name: MINIO_ACCESS_KEY
           value: "loki"
         - name: MINIO_SECRET_KEY

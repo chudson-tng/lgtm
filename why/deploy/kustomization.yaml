@@ -4,6 +4,7 @@ resources:
   - namespace.yaml
   - postgres/statefulset.yaml
   - postgres/service.yaml
+  - minio/deployment.yaml
   - backend/deployment.yaml
   - backend/service.yaml
   - frontend/deployment.yaml
