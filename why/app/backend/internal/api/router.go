@@ -17,7 +17,8 @@ import (
 func NewRouter(db *sql.DB, minio *minio.Client, cfg *config.Config) *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Recovery())
-	r.Use(otelgin.Middleware("why-backend")) // OpenTelemetry tracing
+	r.Use(otelgin.Middleware("why-backend"))    // OpenTelemetry tracing
+	r.Use(middleware.MetricsMiddleware())        // OpenTelemetry metrics
 
 	// CORS middleware to allow browser requests
 	r.Use(cors.New(cors.Config{

@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"why-backend/internal/api"
+	"why-backend/internal/api/middleware"
 	"why-backend/internal/config"
 	"why-backend/internal/storage"
 	"why-backend/internal/telemetry"
@@ -36,6 +37,11 @@ func main() {
 			slog.ErrorContext(ctx, "Failed to shutdown OpenTelemetry", "error", err)
 		}
 	}()
+
+	// Initialize metrics middleware
+	if err := middleware.InitMetrics(ctx); err != nil {
+		log.Fatalf("Failed to initialize metrics: %v", err)
+	}
 
 	// Initialize database
 	db, err := storage.InitDB(ctx, cfg.PostgresURL)
