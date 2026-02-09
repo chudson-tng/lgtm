@@ -70,9 +70,57 @@ spec:
             role = "pod"
           }
 
+          discovery.relabel "pod_metrics" {
+            targets = discovery.kubernetes.pods.targets
+
+            // Keep only pods with prometheus.io/scrape annotation set to true
+            rule {
+              source_labels = ["__meta_kubernetes_pod_annotation_prometheus_io_scrape"]
+              action = "keep"
+              regex = "true"
+            }
+
+            // Use pod annotations for scrape path
+            rule {
+              source_labels = ["__meta_kubernetes_pod_annotation_prometheus_io_path"]
+              action = "replace"
+              target_label = "__metrics_path__"
+              regex = "(.+)"
+            }
+
+            // Use pod annotations for scrape port
+            rule {
+              source_labels = ["__address__", "__meta_kubernetes_pod_annotation_prometheus_io_port"]
+              action = "replace"
+              target_label = "__address__"
+              regex = "([^:]+)(?::\\d+)?;(\\d+)"
+              replacement = "$1:$2"
+            }
+
+            // Add pod labels as metric labels
+            rule {
+              action = "labelmap"
+              regex = "__meta_kubernetes_pod_label_(.+)"
+            }
+
+            // Add namespace as a label
+            rule {
+              source_labels = ["__meta_kubernetes_namespace"]
+              action = "replace"
+              target_label = "namespace"
+            }
+
+            // Add pod name as a label
+            rule {
+              source_labels = ["__meta_kubernetes_pod_name"]
+              action = "replace"
+              target_label = "pod"
+            }
+          }
+
           prometheus.scrape "kubernetes_pods" {
             job_name = "kubernetes-pods"
-            targets = discovery.kubernetes.pods.targets
+            targets = discovery.relabel.pod_metrics.output
             forward_to = [prometheus.remote_write.default.receiver]
           }
 

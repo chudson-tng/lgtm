@@ -39,7 +39,7 @@ data:
           "title": "Explore Tempo Traces",
           "tooltip": "Open Tempo to explore traces",
           "type": "link",
-          "url": "/explore?orgId=1&left=%7B%22datasource%22:%22tempo%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22datasource%22:%7B%22type%22:%22tempo%22,%22uid%22:%22tempo%22%7D,%22queryType%22:%22traceqlSearch%22,%22query%22:%22%7B.service.name%3D%5C%22why-backend%5C%22%7D%22%7D%5D,%22range%22:%7B%22from%22:%22now-1h%22,%22to%22:%22now%22%7D%7D"
+          "url": "/explore?orgId=1&left=%7B%22datasource%22:%22tempo%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22datasource%22:%7B%22type%22:%22tempo%22,%22uid%22:%22tempo%22%7D,%22queryType%22:%22traceqlSearch%22,%22query%22:%22%7Bresource.service.name%3D%5C%22why-backend%5C%22%7D%22%7D%5D,%22range%22:%7B%22from%22:%22now-1h%22,%22to%22:%22now%22%7D%7D"
         },
         {
           "asDropdown": false,
@@ -153,7 +153,7 @@ data:
           "links": [
             {
               "title": "View Traces in Tempo",
-              "url": "/explore?orgId=1&left=%7B%22datasource%22:%22tempo%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22datasource%22:%7B%22type%22:%22tempo%22,%22uid%22:%22tempo%22%7D,%22queryType%22:%22traceqlSearch%22,%22query%22:%22%7B.service.name%3D%5C%22why-backend%5C%22%7D%22%7D%5D,%22range%22:%7B%22from%22:%22${__from}%22,%22to%22:%22${__to}%22%7D%7D"
+              "url": "/explore?orgId=1&left=%7B%22datasource%22:%22tempo%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22datasource%22:%7B%22type%22:%22tempo%22,%22uid%22:%22tempo%22%7D,%22queryType%22:%22traceqlSearch%22,%22query%22:%22%7Bresource.service.name%3D%5C%22why-backend%5C%22%7D%22%7D%5D,%22range%22:%7B%22from%22:%22${__from}%22,%22to%22:%22${__to}%22%7D%7D"
             }
           ]
         },
@@ -328,7 +328,7 @@ data:
               "links": [
                 {
                   "title": "View Traces for ${__field.labels.http_target}",
-                  "url": "/explore?orgId=1&left=%7B%22datasource%22:%22tempo%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22datasource%22:%7B%22type%22:%22tempo%22,%22uid%22:%22tempo%22%7D,%22queryType%22:%22traceqlSearch%22,%22query%22:%22%7B.service.name%3D%5C%22why-backend%5C%22%20%26%26%20.http.target%3D%5C%22${__field.labels.http_target}%5C%22%7D%22%7D%5D,%22range%22:%7B%22from%22:%22${__from}%22,%22to%22:%22${__to}%22%7D%7D"
+                  "url": "/explore?orgId=1&left=%7B%22datasource%22:%22tempo%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22datasource%22:%7B%22type%22:%22tempo%22,%22uid%22:%22tempo%22%7D,%22queryType%22:%22traceqlSearch%22,%22query%22:%22%7Bresource.service.name%3D%5C%22why-backend%5C%22%20%26%26%20.http.target%3D%5C%22${__field.labels.http_target}%5C%22%7D%22%7D%5D,%22range%22:%7B%22from%22:%22${__from}%22,%22to%22:%22${__to}%22%7D%7D"
                 }
               ],
               "mappings": [],
@@ -422,7 +422,7 @@ data:
               "links": [
                 {
                   "title": "View Slow Traces in Tempo",
-                  "url": "/explore?orgId=1&left=%7B%22datasource%22:%22tempo%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22datasource%22:%7B%22type%22:%22tempo%22,%22uid%22:%22tempo%22%7D,%22queryType%22:%22traceqlSearch%22,%22query%22:%22%7B.service.name%3D%5C%22why-backend%5C%22%20%26%26%20duration%3E100ms%7D%22%7D%5D,%22range%22:%7B%22from%22:%22${__from}%22,%22to%22:%22${__to}%22%7D%7D"
+                  "url": "/explore?orgId=1&left=%7B%22datasource%22:%22tempo%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22datasource%22:%7B%22type%22:%22tempo%22,%22uid%22:%22tempo%22%7D,%22queryType%22:%22traceqlSearch%22,%22query%22:%22%7Bresource.service.name%3D%5C%22why-backend%5C%22%20%26%26%20duration%3E100ms%7D%22%7D%5D,%22range%22:%7B%22from%22:%22${__from}%22,%22to%22:%22${__to}%22%7D%7D"
                 }
               ],
               "mappings": [],
@@ -641,7 +641,7 @@ data:
                     "value": [
                       {
                         "title": "View Error Traces",
-                        "url": "/explore?orgId=1&left=%7B%22datasource%22:%22tempo%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22datasource%22:%7B%22type%22:%22tempo%22,%22uid%22:%22tempo%22%7D,%22queryType%22:%22traceqlSearch%22,%22query%22:%22%7B.service.name%3D%5C%22why-backend%5C%22%20%26%26%20status%3Derror%7D%22%7D%5D,%22range%22:%7B%22from%22:%22${__from}%22,%22to%22:%22${__to}%22%7D%7D"
+                        "url": "/explore?orgId=1&left=%7B%22datasource%22:%22tempo%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22datasource%22:%7B%22type%22:%22tempo%22,%22uid%22:%22tempo%22%7D,%22queryType%22:%22traceqlSearch%22,%22query%22:%22%7Bresource.service.name%3D%5C%22why-backend%5C%22%20%26%26%20status%3Derror%7D%22%7D%5D,%22range%22:%7B%22from%22:%22${__from}%22,%22to%22:%22${__to}%22%7D%7D"
                       },
                       {
                         "title": "View Error Logs",
@@ -720,7 +720,7 @@ data:
                 "type": "tempo",
                 "uid": "tempo"
               },
-              "query": "{.service.name=\"why-backend\"}",
+              "query": "{resource.service.name=\"why-backend\"}",
               "queryType": "traceqlSearch",
               "refId": "A",
               "limit": 20
@@ -1005,7 +1005,7 @@ data:
               "links": [
                 {
                   "title": "View Database Query Traces",
-                  "url": "/explore?orgId=1&left=%7B%22datasource%22:%22tempo%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22datasource%22:%7B%22type%22:%22tempo%22,%22uid%22:%22tempo%22%7D,%22queryType%22:%22traceqlSearch%22,%22query%22:%22%7B.service.name%3D%5C%22why-backend%5C%22%20%26%26%20span.db.system%3D%5C%22postgresql%5C%22%7D%22%7D%5D,%22range%22:%7B%22from%22:%22${__from}%22,%22to%22:%22${__to}%22%7D%7D"
+                  "url": "/explore?orgId=1&left=%7B%22datasource%22:%22tempo%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22datasource%22:%7B%22type%22:%22tempo%22,%22uid%22:%22tempo%22%7D,%22queryType%22:%22traceqlSearch%22,%22query%22:%22%7Bresource.service.name%3D%5C%22why-backend%5C%22%20%26%26%20span.db.system%3D%5C%22postgresql%5C%22%7D%22%7D%5D,%22range%22:%7B%22from%22:%22${__from}%22,%22to%22:%22${__to}%22%7D%7D"
                 }
               ],
               "mappings": [],
