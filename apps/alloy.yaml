@@ -21,6 +21,16 @@ spec:
     
     controller:
       type: daemonset
+      volumes:
+        extra:
+          - name: varlog
+            hostPath:
+              path: /var/log
+      volumeMounts:
+        extra:
+          - name: varlog
+            mountPath: /var/log
+            readOnly: true
       
     alloy:
       configMap:
@@ -29,7 +39,7 @@ spec:
           // Log collection
           local.file_match "logs" {
             path_targets = [
-              {__path__ = "/var/log/pods/*/*/*.log"},
+              {__path__ = "/var/log/pods/*/*/*/*.log"},
             ]
             sync_period = "10s"
           }
@@ -219,20 +229,3 @@ spec:
 
     serviceAccount:
       create: true
-
-    # Mount host paths for log collection
-    alloy:
-      mounts:
-        varlog: true
-
-    controller:
-      volumes:
-        extra:
-          - name: varlog
-            hostPath:
-              path: /var/log
-      volumeMounts:
-        extra:
-          - name: varlog
-            mountPath: /var/log
-            readOnly: true
