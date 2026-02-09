@@ -48,13 +48,42 @@ spec:
             ]
             sync_period = "10s"
           }
-          
+
           loki.source.file "logs" {
             targets    = local.file_match.logs.targets
-            forward_to = [loki.write.default.receiver]
+            forward_to = [loki.process.pod_labels.receiver]
             tail_from_end = true
           }
-          
+
+          loki.process "pod_labels" {
+            forward_to = [loki.write.default.receiver]
+
+            // Extract namespace, pod name, and container from filename
+            stage.regex {
+              expression = "^/var/log/pods/(?P<namespace>[^_]+)_(?P<pod>[^_]+)_[^/]+/(?P<container>[^/]+)/.*\\.log$"
+              source     = "filename"
+            }
+
+            // Extract app name from pod name
+            // For deployments: name-replicasethash-podhash -> name
+            // For statefulsets: name-ordinal -> name
+            // For daemonsets: name-podhash -> name
+            stage.regex {
+              expression = "^(?P<app>.+?)(?:-[0-9a-z]+-[a-z0-9]+|-[0-9]+)$"
+              source     = "pod"
+            }
+
+            // Add extracted labels
+            stage.labels {
+              values = {
+                namespace = "",
+                pod       = "",
+                container = "",
+                app       = "",
+              }
+            }
+          }
+
           loki.write "default" {
             endpoint {
               name = "loki"
