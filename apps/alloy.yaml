@@ -216,6 +216,23 @@ spec:
     
     rbac:
       create: true
-    
+
     serviceAccount:
       create: true
+
+    # Mount host paths for log collection
+    alloy:
+      mounts:
+        varlog: true
+
+    controller:
+      volumes:
+        extra:
+          - name: varlog
+            hostPath:
+              path: /var/log
+      volumeMounts:
+        extra:
+          - name: varlog
+            mountPath: /var/log
+            readOnly: true
