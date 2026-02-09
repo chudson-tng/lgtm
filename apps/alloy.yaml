@@ -18,7 +18,12 @@ spec:
   values:
     nameOverride: alloy
     fullnameOverride: alloy
-    
+
+    extraVolumeMounts:
+      - name: varlog
+        mountPath: /var/log
+        readOnly: true
+
     controller:
       type: daemonset
       volumes:
@@ -26,19 +31,20 @@ spec:
           - name: varlog
             hostPath:
               path: /var/log
+      volumeMounts:
+        extra:
+          - name: varlog
+            mountPath: /var/log
+            readOnly: true
 
     alloy:
-      extraVolumeMounts:
-        - name: varlog
-          mountPath: /var/log
-          readOnly: true
       configMap:
         create: true
         content: |
           // Log collection
           local.file_match "logs" {
             path_targets = [
-              {__path__ = "/var/log/pods/*/*/*/*.log"},
+              {__path__ = "/var/log/pods/*/*/*.log"},
             ]
             sync_period = "10s"
           }
